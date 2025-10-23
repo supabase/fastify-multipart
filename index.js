@@ -346,6 +346,10 @@ function fastifyMultipart (fastify, options, done) {
     }
 
     function onFile (name, file, filename, encoding, mimetype) {
+
+      // always listen to ensure there can't be an uncaught error
+      file?.on('error', err => onError(err))
+
       // don't overwrite prototypes
       if (name in Object.prototype) {
         // ensure that stream is consumed, any error is suppressed
